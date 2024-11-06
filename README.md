@@ -20,7 +20,8 @@ ProtectedCache（保护区）：该缓冲区的数据只能由ProbationCache数�
 
 # 算法整体设计思路图：
 
-![image-20241106185700330](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20241106185700330.png)
+![image](https://github.com/user-attachments/assets/4ef69ecc-349a-4a6e-bafc-90d49f30e03f)
+
 
 # 使用用例
 
