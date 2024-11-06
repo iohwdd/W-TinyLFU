@@ -73,7 +73,7 @@ class LFUCache {
     public boolean isFull() {
         return key_table.size() == capacity;
     }
-    private String findMinFreqKey() {
+    public String findMinFreqKey() {
         int minFreq = Integer.MAX_VALUE;
         String minFreqKey = null;
         for (String key : key_table.keySet()) {

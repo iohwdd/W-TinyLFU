@@ -67,19 +67,20 @@ class TinyLFU {
     public void put(String key, Object value) {
         put(new Node(key,value));
     }
-    private boolean promotion(Node node) {
-        CountMinSketch probationCms = probationCache.getCountMinSketch();
-        boolean isSuccess = !protectedCache.isFull() || protectedCache.pk(probationCms.getEstimatedCount(node.getKey().getBytes()));
+    private void promotion(Node node) {
+        // protectedCache频率最低的缓存作为candidate，根据pk来决定是淘汰还是写入probationCache
+        if(protectedCache.isFull()) {
+            String candidateFreq = protectedCache.findMinFreqKey();
+            probationCache.put(candidateFreq,protectedCache.get(candidateFreq));
+        }
         String key = node.getKey();
         Object value = node.getValue();
-        if(isSuccess) {
-            probationCache.remove(node.getKey());
-            protectedCache.put(key, value);
+        // 晋升
+        probationCache.remove(node.getKey());
+        protectedCache.put(key, value);
+        int freq = probationCache.getCountMinSketch().getEstimatedCount(key.getBytes());
+        protectedCache.getCountMinSketch().setFrequency(key.getBytes(),freq);
 
-            int freq = probationCache.getCountMinSketch().getEstimatedCount(key.getBytes());
-            protectedCache.getCountMinSketch().setFrequency(key.getBytes(),freq);
-        }
-        return isSuccess;
     }
     public void invalidate(String key) {
         if(probationCache.containsKey(key)) {
