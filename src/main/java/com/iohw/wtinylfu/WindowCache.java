@@ -97,6 +97,10 @@ class WindowCache {
         countMinSketch.set(key.getBytes());
         return entry.value;
     }
+    public void invalidate(String key) {
+        cache.remove(key);
+        size --;
+    }
     public boolean isFull() {
         return size == capacity;
     }

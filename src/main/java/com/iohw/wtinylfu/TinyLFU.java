@@ -67,18 +67,6 @@ class TinyLFU {
     public void put(String key, Object value) {
         put(new Node(key,value));
     }
-    public boolean isProtected(String key) {
-        return protectedCache.containsKey(key);
-    }
-    public boolean isProbation(String key) {
-        return probationCache.containsKey(key);
-    }
-    public boolean isFull() {
-        return probationCache.isFull() && protectedCache.isFull();
-    }
-    public boolean containsKey(String key) {
-        return probationCache.containsKey(key) || protectedCache.containsKey(key);
-    }
     private boolean promotion(Node node) {
         CountMinSketch probationCms = probationCache.getCountMinSketch();
         boolean isSuccess = !protectedCache.isFull() || protectedCache.pk(probationCms.getEstimatedCount(node.getKey().getBytes()));
@@ -92,5 +80,25 @@ class TinyLFU {
             protectedCache.getCountMinSketch().setFrequency(key.getBytes(),freq);
         }
         return isSuccess;
+    }
+    public void invalidate(String key) {
+        if(probationCache.containsKey(key)) {
+            probationCache.remove(key);
+        }
+        if(protectedCache.containsKey(key)) {
+            protectedCache.remove(key);
+        }
+    }
+    public boolean isProtected(String key) {
+        return protectedCache.containsKey(key);
+    }
+    public boolean isProbation(String key) {
+        return probationCache.containsKey(key);
+    }
+    public boolean isFull() {
+        return probationCache.isFull() && protectedCache.isFull();
+    }
+    public boolean containsKey(String key) {
+        return probationCache.containsKey(key) || protectedCache.containsKey(key);
     }
 }

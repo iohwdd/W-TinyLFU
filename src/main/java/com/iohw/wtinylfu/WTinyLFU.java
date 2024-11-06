@@ -37,6 +37,14 @@ public class WTinyLFU {
         }
         windowCache.put(key, value);
     }
+    public void invalidate(String key) {
+        if(windowCache.containsKey(key)) {
+            windowCache.invalidate(key);
+        }
+        if(tinyLFU.containsKey(key)) {
+            tinyLFU.invalidate(key);
+        }
+    }
     public boolean isProtected(String key) {
         return tinyLFU.isProtected(key);
     }

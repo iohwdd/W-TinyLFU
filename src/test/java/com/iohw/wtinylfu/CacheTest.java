@@ -63,4 +63,12 @@ public class CacheTest {
             System.out.println();
         }
     }
+    @Test
+    public void testInvalidate() {
+        WTinyLFU cache = new WTinyLFU(100);
+        cache.put("1",1);
+        System.out.println("cache.get(\"1\") = " + cache.get("1"));
+        cache.invalidate("1");
+        System.out.println("cache.get(\"1\") = " + cache.get("1"));
+    }
 }
